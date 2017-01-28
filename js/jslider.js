@@ -7,14 +7,48 @@
 
 $.fn.JSlider = function (options) {
     var _jslider;
-    var animations = {
-        'fade': function (element) {
-            $(element).fadeIn();
+    var animations = [
+        {
+            name: 'fadeIn',
+            hideOnStart: true,
+            speed: 200,
+            method: function (element, speed) {
+                speed = speed || this.speed;
+
+                $(element).fadeIn(speed);
+            }
         },
-        'slide': function (element) {
-            $(element).slideDown();
+        {
+            name: 'fadeOut',
+            hideOnStart: false,
+            speed: 200,
+            method: function (element, speed) {
+                speed = speed || this.speed;
+
+                $(element).fadeOut(speed);
+            }
+        },
+        {
+            name: 'slideDown',
+            hideOnStart: true,
+            speed: 200,
+            method: function (element, speed) {
+                speed = speed || this.speed;
+
+                $(element).slideDown(speed);
+            }
+        },
+        {
+            name: 'slideUp',
+            hideOnStart: false,
+            speed: 200,
+            method: function (element, speed) {
+                speed = speed || this.speed;
+
+                $(element).slideUp(speed);
+            }
         }
-    };
+    ];
 
     this.init = function (options) {
         _jslider = this;
@@ -163,6 +197,7 @@ $.fn.JSlider = function (options) {
     this.animSlide = function (arrow) { //параметр string ('next', 'prev') или int (индекс слайда)
         clearTimeout(_jslider.options.timeout);
         var cur_slide_num = _jslider.options.slide_num;
+
         if (arrow == 'next') {
             if (_jslider.options.slide_num == (_jslider.options.slide_count - 1)) {
                 _jslider.options.slide_num = 0;
@@ -185,8 +220,8 @@ $.fn.JSlider = function (options) {
 
         var $cur_slide = $(_jslider).find('.slide').eq(cur_slide_num);
         var $next_slide = $(_jslider).find('.slide').eq(_jslider.options.slide_num);
-        var $animatedElements = _jslider.getAnimatedElements($next_slide);
 
+        var $animatedElements = _jslider.getAnimatedElements($next_slide);
         _jslider.hideElements($animatedElements);
 
         switch (_jslider.options.slider_effect) {
@@ -253,31 +288,49 @@ $.fn.JSlider = function (options) {
         $(_jslider).find('.control-slide').eq(_jslider.options.slide_num).addClass('active');
     };
 
-    this.getAnimatedElements = function (slide) {
-        return slide.find('[data-animation]');
+    this.getAnimatedElements = function ($slide) {
+        return $slide.find('[data-animation]')
+            .filter(function () { //фильтруем неизвестные нам анимации
+                var currAnimation = _jslider.getAnimation($(this).attr('data-animation'));
+
+                return currAnimation ? true : false;
+            });
     };
 
-    this.hideElements = function (elements) {
-        elements.each(function () {
-            $(this).hide();
+    this.getAnimation = function (name) {
+        for(var i = 0; i < animations.length; i++) {
+            if (animations[i].name === name) {
+                return animations[i];
+            }
+        }
+
+        return null;
+    };
+
+    this.hideElements = function ($elements) {
+        $elements.each(function () {
+            var $el = $(this);
+            var currAnimation = _jslider.getAnimation($el.attr('data-animation'));
+
+            if (currAnimation.hideOnStart) {
+                $el.hide();
+            }
         })
     };
 
-    this.animateElements = function (elements) {
-        if (!elements.length) return;
+    this.animateElements = function ($elements) {
+        if (!$elements.length) return;
 
-        elements.each(function () {
-            var el = $(this);
-            var animationName = el.attr('data-animation');
-            var delay = paseInt(el.attr('data-animation-delay'));
-            var animationFunc = animations[animationName];
-
-            if (typeof animationFunc !== 'function') return;
+        $elements.each(function () {
+            var $el = $(this);
+            var currAnimation = _jslider.getAnimation($el.attr('data-animation'));
+            var delay = paseInt($el.attr('data-delay'));
+            var speed = paseInt($el.attr('data-speed'));
 
             if (delay) {
-                setTimeout(animationFunc.bind(null, el), delay);
+                setTimeout(currAnimation.method.bind(currAnimation, $el, speed), delay);
             } else {
-                animationFunc(el);
+                currAnimation.method($el, speed);
             }
         });
     };
