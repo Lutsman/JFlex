@@ -222,7 +222,7 @@ $.fn.JSlider = function (options) {
         var $next_slide = $(_jslider).find('.slide').eq(_jslider.options.slide_num);
 
         var $animatedElements = _jslider.getAnimatedElements($next_slide);
-        _jslider.hideElements($animatedElements);
+        _jslider.prepareElements($animatedElements);
 
         switch (_jslider.options.slider_effect) {
             case 'slidex':
@@ -307,13 +307,15 @@ $.fn.JSlider = function (options) {
         return null;
     };
 
-    this.hideElements = function ($elements) {
+    this.prepareElements = function ($elements) {
         $elements.each(function () {
             var $el = $(this);
             var currAnimation = _jslider.getAnimation($el.attr('data-animation'));
 
             if (currAnimation.hideOnStart) {
                 $el.hide();
+            } else {
+                $el.show();
             }
         })
     };
@@ -324,8 +326,8 @@ $.fn.JSlider = function (options) {
         $elements.each(function () {
             var $el = $(this);
             var currAnimation = _jslider.getAnimation($el.attr('data-animation'));
-            var delay = paseInt($el.attr('data-delay'));
-            var speed = paseInt($el.attr('data-speed'));
+            var delay = parseInt($el.attr('data-delay'));
+            var speed = parseInt($el.attr('data-speed'));
 
             if (delay) {
                 setTimeout(currAnimation.method.bind(currAnimation, $el, speed), delay);
