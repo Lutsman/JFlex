@@ -1,4 +1,9 @@
 /* JSlider for Drupal-7 v1.1 */
+/*
+* dependency:
+* - jquery.min.js
+* - jquery.swipe.js
+* */
 
 $.fn.JSlider = function (options) {
     var _jslider;

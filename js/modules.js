@@ -3,14 +3,19 @@
 jQuery(document).ready(function () {
 
   /* phone mask in input field */
-  jQuery('input[name="submitted[phone], input[name="phone"], .field-delivery_phone input[type="text"]').mask("+7 (999) 999 99 99?9", {placeholder: " "});
+  jQuery('input[name="submitted"], input[name="phone"], .field-delivery_phone input[type="text"]').mask("+7 (999) 999 99 99?9", {placeholder: " "});
 
   /* phone number in href */
 
   jQuery('.tel').each(function () {
     var tel = jQuery(this).text();
     var cleartel = tel.replace(/[^0-9]/g, '');
-    jQuery(this).wrap('<a class="telline" href="tel:+' + cleartel + '" />');
+
+    if (cleartel.indexOf('8800') !== 0) {
+      cleartel = '+' + cleartel;
+    }
+
+    jQuery(this).wrap('<a class="telline" href="tel:' + cleartel + '" />');
   });
 
   /* slide up page button arrow */
