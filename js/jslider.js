@@ -58,7 +58,15 @@ $.fn.JSlider = function (options) {
             timeout: null,
             slide_num: 0,
             slide_count: 0,
-            pause: false
+            pause: false,
+            isImageMode: false,
+            thumbs: {
+                viewRange: 4,
+                firstInView: 0,
+                lastInView: 3,
+                stepWidth: 0
+            }
+
         };
         _jslider.options.default = {
             slide_speed: 400
@@ -83,47 +91,8 @@ $.fn.JSlider = function (options) {
         });
         $(_jslider).find('.slide').first().show();
 
-        _jslider.options.arrows = $('<div class="pn-control m-hide"><a class="pn prev" href="#"></a><a class="pn next" href="#"></a></div>');
-        $(_jslider).find('.slider-content').prepend(_jslider.options.arrows);
-
-
-        $(_jslider.options.arrows).find('.next').click(function () {
-            _jslider.animSlide('next');
-            return false;
-        });
-        $(_jslider.options.arrows).find('.prev').click(function () {
-            _jslider.animSlide('prev');
-            return false;
-        });
-        _jslider.options.slider_controls = $('<div/>').addClass('slider-controls');
-        var groups = [];
-        $(_jslider).find('.slide').each(function (index) {
-            var group_name = $(this).attr('name');
-            if ($.inArray(group_name, groups) == -1) {
-                groups.push(group_name);
-            }
-            var $slide_control = $('<div/>')
-                .addClass('control-slide')
-                .attr('data-group-name', group_name);
-
-            // добавляем подгрузку pager изображений из .imgpager
-            if ($(_jslider).attr('data-control-mode') == 'images') {
-                $slide_control.append($('.imgpager img:first', _jslider));
-            }
-
-            $slide_control.append('<div class="hide">' + index + '</div>');
-            $slide_control.appendTo(_jslider.options.slider_controls);
-        });
-        _jslider.options.slider_controls.appendTo(_jslider);
-        for (var k in groups) {
-            $(_jslider).find('.control-slide[data-group-name="' + groups[k] + '"]').wrapAll('<span class="group"></span>');
-        }
-        $(_jslider.options.slider_controls).find('.group').last().addClass('last');
-        $(_jslider.options.slider_controls).find('.control-slide:first').addClass('active');
-        $(_jslider.options.slider_controls).find('.control-slide').click(function () {
-            var goToNum = parseFloat($(this).text());
-            _jslider.animSlide(goToNum);
-        });
+        /*создаем управление*/
+        _jslider.renderControls();
 
         // data-slider-mode and hover
         if ($(_jslider).attr('data-slider-mode') == 'paused') {
@@ -288,8 +257,8 @@ $.fn.JSlider = function (options) {
         $(_jslider).find('.control-slide').eq(_jslider.options.slide_num).addClass('active');
     };
 
-    this.getAnimatedElements = function ($slide) {
-        return $slide.find('[data-animation]')
+    this.getAnimatedElements = function ($parent) {
+        return $parent.find('[data-animation]')
             .filter(function () { //фильтруем неизвестные нам анимации
                 var currAnimation = _jslider.getAnimation($(this).attr('data-animation'));
 
@@ -335,6 +304,116 @@ $.fn.JSlider = function (options) {
                 currAnimation.method($el, speed);
             }
         });
+    };
+
+    this.renderControls = function () {
+        /*render arrows*/
+        _jslider.options.arrows = $('<div class="pn-control m-hide"><a class="pn prev" href="#"></a><a class="pn next" href="#"></a></div>');
+        $(_jslider).find('.slider-content').prepend(_jslider.options.arrows);
+
+
+        $(_jslider.options.arrows).find('.next').click(function () {
+            _jslider.animSlide('next');
+            return false;
+        });
+        $(_jslider.options.arrows).find('.prev').click(function () {
+            _jslider.animSlide('prev');
+            return false;
+        });
+
+        /*render thumbs slider*/
+        _jslider.options.slider_controls = $('<div/>').addClass('slider-controls');
+        var groups = [];
+        var isImageMode = _jslider.options.isImageMode = $(_jslider).attr('data-control-mode') == 'images';
+
+        $(_jslider).find('.slide').each(function (index) {
+            var group_name = $(this).attr('name');
+            if ($.inArray(group_name, groups) == -1) {
+                groups.push(group_name);
+            }
+            var $slide_control = $('<div/>')
+                .addClass('control-slide')
+                .attr('data-group-name', group_name);
+
+            // добавляем подгрузку pager изображений из .imgpager
+            if (isImageMode) {
+                $slide_control.append($('.imgpager img:first', _jslider));
+            }
+
+            $slide_control.append('<div class="hide">' + index + '</div>');
+            $slide_control.appendTo(_jslider.options.slider_controls);
+        });
+        _jslider.options.slider_controls.appendTo(_jslider);
+
+        if (isImageMode) {
+            var $prev = $('<span class="prev-thumb">prev</span>');
+            var $next = $('<span class="next-thumb">next</span>');
+            var $inner = $('<div class="inner"></div>');
+            var $outer = $('<div class="outer"></div>');
+            var thumb = _jslider.options.slider_controls.find('.control-slide')[0];
+            var thumbOptions = _jslider.options.thumbs;
+
+            thumbOptions.stepWidth = thumb.offsetWidth;
+            thumbOptions.viewRange = parseInt($(_jslider).attr('data-previewslides')) || thumbOptions.viewRange;
+            thumbOptions.firstInView = 0;
+            thumbOptions.lastInView = thumbOptions.viewRange - 1;
+
+            $outer.css({
+                'width': thumb.offsetWidth * thumbOptions.viewRange + 'px',
+                'height': thumb.offsetHeight + 'px'
+            });
+
+            _jslider.options.slider_controls
+                .wrapInner($inner)
+                .wrapInner($outer)
+                .append($prev)
+                .append($next);
+
+            $prev.click(function () {
+               //console.log('prev');
+                _jslider.animSlide('prev');
+                _jslider.animThumbs('prev', 1);
+            });
+            $next.click(function () {
+                _jslider.animSlide('next');
+                _jslider.animThumbs('next', 1);
+                //console.log('next');
+            });
+
+            console.log(_jslider.options.slider_controls.find('.inner'));
+        }
+
+        for (var k in groups) {
+            $(_jslider).find('.control-slide[data-group-name="' + groups[k] + '"]').wrapAll('<span class="group"></span>');
+        }
+        $(_jslider.options.slider_controls).find('.group').last().addClass('last');
+        $(_jslider.options.slider_controls).find('.control-slide:first').addClass('active');
+        $(_jslider.options.slider_controls).find('.control-slide').click(function () {
+            var goToNum = parseFloat($(this).text());
+            _jslider.animSlide(goToNum);
+        });
+
+    };
+
+    this.animThumbs = function (arrow, count) {
+        var $inner = _jslider.options.slider_controls.find('.inner');
+        var thumbOptions = _jslider.options.thumbs;
+
+        if (arrow === 'prev') {
+            if (count) {
+                $inner.animate(
+                    {'left': '+=' + count * thumbOptions.stepWidth},
+                    _jslider.options.slide_speed
+                );
+            }
+        } else if (arrow === 'next') {
+            if (count) {
+                $inner.animate(
+                    {'left': '-=' + count * thumbOptions.stepWidth},
+                    _jslider.options.slide_speed
+                );
+            }
+        }
     };
 
     this.init(options);
