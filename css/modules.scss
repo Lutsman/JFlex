@@ -973,42 +973,7 @@ should be hidden  ----- #line-items-div td {padding:0;} */
 .page-slideshow[data-control-mode="images"] .control-slide.active {
     border: 1px solid #ddd;
 }
-.page-slideshow[data-control-mode="images"] {
-    .slider-controls {
-        padding: 0 15px;
 
-        .outer {
-            overflow: hidden;
-            position: relative;
-            z-index: 2;
-        }
-
-        .inner {
-            width: auto;
-            left: 0;
-            top: 0;
-            position: absolute;
-            z-index: 2;
-
-            .control-slide {
-                float: left;
-                display: block;
-            }
-        }
-
-        .prev-thumb, .next-thumb {
-            cursor: pointer;
-        }
-
-        .prev-thumb {
-
-        }
-
-        .next-thumb {
-
-        }
-    }
-}
 
 /* views */
 

@@ -957,24 +957,6 @@ should be hidden  ----- #line-items-div td {padding:0;} */
 .page-slideshow[data-control-mode="images"] .control-slide.active {
   border: 1px solid #ddd; }
 
-.page-slideshow[data-control-mode="images"] .slider-controls {
-  padding: 0 15px; }
-  .page-slideshow[data-control-mode="images"] .slider-controls .outer {
-    overflow: hidden;
-    position: relative;
-    z-index: 2; }
-  .page-slideshow[data-control-mode="images"] .slider-controls .inner {
-    width: auto;
-    left: 0;
-    top: 0;
-    position: absolute;
-    z-index: 2; }
-    .page-slideshow[data-control-mode="images"] .slider-controls .inner .control-slide {
-      float: left;
-      display: block; }
-  .page-slideshow[data-control-mode="images"] .slider-controls .prev-thumb, .page-slideshow[data-control-mode="images"] .slider-controls .next-thumb {
-    cursor: pointer; }
-
 /* views */
 .view {
   position: relative; }
