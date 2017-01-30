@@ -24,7 +24,7 @@
       display: block;
       position: absolute;
       z-index: 2;
-      font-family: icons; }
+      font-family: 'icons'; }
   .page-slideshow[data-control-mode="images"] .slider-controls .prev-thumb {
     left: 0; }
     .page-slideshow[data-control-mode="images"] .slider-controls .prev-thumb::before {
@@ -32,6 +32,7 @@
   .page-slideshow[data-control-mode="images"] .slider-controls .next-thumb {
     right: 0; }
     .page-slideshow[data-control-mode="images"] .slider-controls .next-thumb::before {
-      content: '\e7e3'; }
+      content: '\e7e3';
+      transform: translate3d(-100%, 0, 0); }
 
 /*# sourceMappingURL=custom.css.map */

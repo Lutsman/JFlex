@@ -33,7 +33,7 @@
                 display: block;
                 position: absolute;
                 z-index: 2;
-                font-family: icons;
+                font-family: 'icons';
             }
         }
 
@@ -50,6 +50,7 @@
 
             &::before {
                 content: '\e7e3';
+                transform: translate3d(-100%, 0, 0);
             }
         }
     }

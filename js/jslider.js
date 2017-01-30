@@ -367,8 +367,8 @@ $.fn.JSlider = function (options) {
         _jslider.options.slider_controls.appendTo(_jslider);
 
         if (isImageMode) {
-            var $prev = $('<span class="prev-thumb">prev</span>');
-            var $next = $('<span class="next-thumb">next</span>');
+            var $prev = $('<span class="prev-thumb pn"></span>');
+            var $next = $('<span class="next-thumb pn"></span>');
             var $inner = $('<div class="inner"></div>');
             var $outer = $('<div class="outer"></div>');
             var thumb = _jslider.options.slider_controls.find('.control-slide')[0];
