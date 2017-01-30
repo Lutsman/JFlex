@@ -405,6 +405,7 @@ $.fn.JSlider = function (options) {
 
         if (arrow === 'prev') {
             if (count) {
+                if (count > thumbOptions.firstInView)
                 left = count * thumbOptions.stepWidth;
                 prefix = '+=';
             } else {
