@@ -397,23 +397,32 @@ $.fn.JSlider = function (options) {
 
     this.animThumbs = function (arrow, count) {
         var $inner = _jslider.options.slider_controls.find('.inner');
+        var options = _jslider.options;
         var thumbOptions = _jslider.options.thumbs;
+        var speed = _jslider.options.slide_speed;
+        var left;
+        var prefix = '';
 
         if (arrow === 'prev') {
             if (count) {
-                $inner.animate(
-                    {'left': '+=' + count * thumbOptions.stepWidth},
-                    _jslider.options.slide_speed
-                );
+                left = count * thumbOptions.stepWidth;
+                prefix = '+=';
+            } else {
+                left = 0;
             }
         } else if (arrow === 'next') {
             if (count) {
-                $inner.animate(
-                    {'left': '-=' + count * thumbOptions.stepWidth},
-                    _jslider.options.slide_speed
-                );
+                left = count * thumbOptions.stepWidth;
+                prefix = '-=';
+            } else {
+                left = (options.slide_count - thumbOptions.viewRange) * thumbOptions.stepWidth;
             }
         }
+
+        $inner.animate(
+            {'left': prefix + left},
+            speed
+        );
     };
 
     this.init(options);
