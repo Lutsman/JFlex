@@ -4,105 +4,19 @@
 
 /* custom css-files */
 
-.transparent-bg {
-    background-color: transparent;
+
+img {
+    display: inline-block;
+    vertical-align: bottom;
 }
-
-
-/*header*/
-
 .logo {
-    font-size: 46px;
-    font-weight: bold;
-    color: inherit;
-    text-decoration: none;
+    display: inline-block;
 }
-
-.globalsearch {
-    .block-title {
-        font-style: italic;
-    }
-    input.form-submit {
-        width: 30px;
-        padding: 0;
-        background: transparent;
-        box-shadow: none;
-
-        &:hover {
-            background-color: transparent;
-        }
-    }
-    .form-actions::before {
-        top: 3px;
-        font-size: 16px;
-    }
-}
-
-
-/*top__menu*/
-
-.top__menu {
-
-    a {
-        color: inherit;
-        border: 1px solid #444;
-        @include transition(all 0.2s ease);
-
-        &:hover {
-            background-color: #ccc;
-        }
-    }
-    li + li a {
-        border-left: none;
-    }
-    &.justify a {
+.menu.justify {
+    a, span {
         display: block;
         line-height: 50px;
     }
 }
 
-
-/*top__slider*/
-
-.top__slider {
-
-    .slide {
-        background-color: #eee;
-    }
-    .slider-controls .control-slide {
-        border: 1px solid #999;
-    }
-    .control-slide.active {
-        background-color: blue;
-        border: 1px solid transparent;
-    }
-    .pn-control .pn {
-        color: #999 !important;
-    }
-}
-.slide__picture {
-    width: 80px;
-    height: 80px;
-    font-family: "Times New Roman", serif;
-    font-size: 64px;
-    font-weight: bold;
-    line-height: 75px;
-    background-color: green;
-}
-
-
-/*hosting*/
-.hosting__content {
-    img {
-        display: inline-block;
-        vertical-align: bottom;
-    }
-}
-.hosting__counter {
-    font-size: 64px;
-    font-style: italic;
-}
-.hosting__counter__accent {
-    color: green;
-}
 

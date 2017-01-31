@@ -1,0 +1,110 @@
+/* adaptive media queries */
+
+
+@media screen and (max-width:720px) {
+
+	/* common adaptive styles */
+
+	html {width:100%;}
+	#major, body#major .hold {width:100%; min-width:100%!important; -webkit-text-size-adjust: 100%;
+		-ms-text-size-adjust: 100%;}
+
+	.row {display:inherit;}
+	.row .col {float:none; width:100%;}
+	.row .col.w2 {width:33.3%; border:none;}
+	.row .col.w3, .row .col.w6 {width:50%; border:none;}
+	.row .col.w2, .row .col.w3, .row .col.w6, .row .col.w5, .row .col.w7 {width:100%; border:none;}
+
+	.row.noadaptive .col {float:left!important; width:inherit!important;}
+
+	.catalog-full {padding:0 3px;}
+	.catalog-full .row .col.w4 {width:50%; float:left;}
+
+	.pad-h {padding:0;}	
+	.p {padding:0;} .m {margin:0;}
+	.paged {padding:10px;}
+	.m-space {padding:20px; margin:10px;}
+	
+	.row .col.left, .row .col.right {text-align:center;}
+	.col img.l {float:none; display:block; width:auto;}
+	.col img.retina {max-width:inherit; min-width:inherit; display:inline;}
+
+	.tabs-nav .tab-name {padding:10px; font-size:80%; display:inline;}
+
+	.page-slideshow.general, .page-slideshow.general .slider-content {max-height:300px;}
+
+	.page-slideup {bottom:20px;}
+	.description {font-size:10px;}
+
+    #major .page-slideshow {min-width:100%; height:400px;}
+    #major .page-slideshow .slider-content img {width:300px!important; height:auto!important;}
+    #major .page-slideshow[data-control-mode="images"] .slider-controls {bottom:20px;}
+    #major .page-slideshow.addpreviews {min-height:480px;}
+    #major .page-slideshow .slide {text-align:center;}
+
+    .page-content {overflow:hidden;}
+
+    .total-rows {display:none;}
+	/* #major, body#major .hold {width:720px; min-width:720px!important;} */
+
+
+	.tab-name {display:block; width:100%; margin:0; font-size:16px; border:none; border-bottom:1px solid rgba(0,0,0,0.1);}
+	.tab-name:before, #major .tab-name:after {display:none;}
+
+	.product.teaser {height:auto; overflow:hidden; margin:0 3px 6px; padding:0; text-align:center;}
+	.product.teaser .marker {font-size:22px; left:20px;}
+	.product.teaser .data {box-shadow:none; margin:0; top:0;}
+	.product.teaser .data:hover {box-shadow:none;}
+	.product.teaser .sku {display:block!important; clear:both!important;}
+	.product.teaser .photo {margin:0 0 20px;}
+	.product.teaser .photo img.retina-show {width:100%!important; height:auto!important;}
+	.product.teaser .prices {text-align:center; min-height:auto;}
+	.product.teaser .title {margin:0 0 10px; font-size:12px;}
+	.product.teaser .prices .additional {margin:0;}
+	.product.teaser .prices .current {margin-bottom:10px;}
+	.product.teaser .tocart {display:none!important;}
+	.product.teaser .node-add-to-cart {padding:0 10px; font-size:14px;}
+
+	.product.complete .title {text-align:center;}
+	.product.complete .add-to-cart .form-item-qty {float:none;}
+	.product.complete .prices .additional {width:auto;}
+
+	.form-item-qty .control, .cart-content .form-type-uc-quantity .control {width:35px; height:35px; line-height:33px;}
+	.form-item-qty input[type="text"], .cart-content .form-type-uc-quantity input[type="text"] {height:35px; line-height:35px; width:25px; top:-2px;}
+
+	.cart-content form table td {padding:5px;}
+
+	#uc-cart-view-form td.subtotal {padding-top:30px;}
+
+	.checkout h3 {text-align:center;}
+
+	.checkout .cart-content td.qty {width:125px;}
+	.checkout .cart-content td.desc {min-width:70px;}
+
+
+
+
+}
+
+
+@media screen and (max-width:480px) {
+
+	.page-content {margin-top:0;}
+
+	#major .page-slideshow .slider-content img {width:100%!important; height:auto!important;}
+	.tabs-nav .tab-name:before, .tabs-nav .tab-name:after {display:none;}
+	.tabs-nav .tab-name {padding:20px; font-size:16px; display:block; margin:0; border-bottom:1px solid rgba(0,0,0,0.1);}
+
+	.cart-content td.image {display:none!important;}
+	.cart-content td.remove {min-width:25px;}
+	.cart-content td.remove:before {top:20px; left:0;}
+
+	.pager li.pager-ellipsis {display:none!important;}
+
+	.filters .views-exposed-form label {display:none;}
+
+	.checkout .cart-content {padding:10px;}
+
+
+
+}

@@ -1,0 +1,6 @@
+/*ckeditor additional styling */
+
+.cke_editable .contextual-links-wrapper {display:none!important;}
+.cke_editable .row {border:1px solid #ddd; padding:5px; margin:0 0 10px;}
+.cke_editable .col {border:1px dotted #ddd;}
+.cke_editable .retina {display:block!important; position:relative!important; opacity:1!important; transform: scale(0.5); -moz-transform:scale(0.5); -webkit-transform:scale(0.5);}
