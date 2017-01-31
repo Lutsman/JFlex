@@ -1,6 +1,7 @@
 /*slider*/
 .page-slideshow[data-control-mode="images"] .slider-controls {
-  padding: 0 15px; }
+  padding: 0 15px;
+  width: auto; }
   .page-slideshow[data-control-mode="images"] .slider-controls .outer {
     overflow: hidden;
     position: relative;

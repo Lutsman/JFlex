@@ -92,6 +92,9 @@ $.fn.JSlider = function (options) {
         $(_jslider).find('.slide').first().show();
 
         /*создаем управление*/
+        /*узнаем нужно ли строить превью*/
+        _jslider.options.isImageMode = $(_jslider).attr('data-control-mode') == 'images';
+
         _jslider.renderControls();
 
         // data-slider-mode and hover
@@ -119,16 +122,10 @@ $.fn.JSlider = function (options) {
                     switch ((e.keyCode ? e.keyCode : e.which)) {
                         case 37:   // Left Arrow
                             e.preventDefault();
-                            if (_jslider.isImageMode) {
-                                _jslider.animThumbs('prev');
-                            }
                             _jslider.animSlide('prev');
                             break;
                         case 39:   // Right Arrow
                             e.preventDefault();
-                            if (_jslider.isImageMode) {
-                                _jslider.animThumbs('next');
-                            }
                             _jslider.animSlide('next');
                             break;
                     }
@@ -147,16 +144,10 @@ $.fn.JSlider = function (options) {
                 clearTimeout(_jslider.options.timeout);
                 switch (direction) {
                     case 'left':
-                        if (_jslider.isImageMode) {
-                            _jslider.animThumbs('next');
-                        }
                         _jslider.animSlide('next');
                         break;
 
                     case 'right':
-                        if (_jslider.isImageMode) {
-                            _jslider.animThumbs('prev');
-                        }
                         _jslider.animSlide('prev');
                         break;
                 }
@@ -169,9 +160,6 @@ $.fn.JSlider = function (options) {
         clearTimeout(_jslider.options.timeout);
         if (!_jslider.options.pause) {
             _jslider.options.timeout = setTimeout(function () {
-                if (_jslider.isImageMode) {
-                    _jslider.animThumbs('next');
-                }
                 _jslider.animSlide('next')
             }, _jslider.options.timeout_delay);
         }
@@ -323,29 +311,34 @@ $.fn.JSlider = function (options) {
 
     this.renderControls = function () {
         /*render arrows*/
+        _jslider.renderArrows();
+
+        /*render thumbs slider*/
+        if (_jslider.options.isImageMode) {
+            _jslider.renderThumbs();
+        } else {
+            _jslider.renderDots();
+        }
+    };
+
+    this.renderArrows = function () {
         _jslider.options.arrows = $('<div class="pn-control m-hide"><a class="pn prev" href="#"></a><a class="pn next" href="#"></a></div>');
         $(_jslider).find('.slider-content').prepend(_jslider.options.arrows);
 
 
         $(_jslider.options.arrows).find('.next').click(function () {
-            if (_jslider.isImageMode) {
-                _jslider.animThumbs('next');
-            }
             _jslider.animSlide('next');
             return false;
         });
         $(_jslider.options.arrows).find('.prev').click(function () {
-            if (_jslider.isImageMode) {
-                _jslider.animThumbs('prev');
-            }
             _jslider.animSlide('prev');
             return false;
         });
+    };
 
-        /*render thumbs slider*/
+    this.renderDots = function () {
         _jslider.options.slider_controls = $('<div/>').addClass('slider-controls');
         var groups = [];
-        var isImageMode = _jslider.options.isImageMode = $(_jslider).attr('data-control-mode') == 'images';
 
         $(_jslider).find('.slide').each(function (index) {
             var group_name = $(this).attr('name');
@@ -356,51 +349,10 @@ $.fn.JSlider = function (options) {
                 .addClass('control-slide')
                 .attr('data-group-name', group_name);
 
-            // добавляем подгрузку pager изображений из .imgpager
-            if (isImageMode) {
-                $slide_control.append($('.imgpager img:first', _jslider));
-            }
-
             $slide_control.append('<div class="hide">' + index + '</div>');
             $slide_control.appendTo(_jslider.options.slider_controls);
         });
         _jslider.options.slider_controls.appendTo(_jslider);
-
-        if (isImageMode) {
-            var $prev = $('<span class="prev-thumb pn"></span>');
-            var $next = $('<span class="next-thumb pn"></span>');
-            var $inner = $('<div class="inner"></div>');
-            var $outer = $('<div class="outer"></div>');
-            var thumb = _jslider.options.slider_controls.find('.control-slide')[0];
-            var thumbOptions = _jslider.options.thumbs;
-
-            thumbOptions.stepWidth = thumb.offsetWidth;
-            thumbOptions.viewRange = parseInt($(_jslider).attr('data-previewslides')) || thumbOptions.viewRange;
-            thumbOptions.firstInView = 0;
-            thumbOptions.lastInView = thumbOptions.viewRange - 1;
-
-            $outer.css({
-                'width': thumb.offsetWidth * thumbOptions.viewRange + 'px',
-                'height': thumb.offsetHeight + 'px'
-            });
-
-            _jslider.options.slider_controls
-                .wrapInner($inner)
-                .wrapInner($outer)
-                .append($prev)
-                .append($next);
-
-            $prev.click(function () {
-               //console.log('prev');
-                _jslider.animThumbs('prev');
-                _jslider.animSlide('prev');
-            });
-            $next.click(function () {
-                _jslider.animThumbs('next');
-                _jslider.animSlide('next');
-                //console.log('next');
-            });
-        }
 
         for (var k in groups) {
             $(_jslider).find('.control-slide[data-group-name="' + groups[k] + '"]').wrapAll('<span class="group"></span>');
@@ -411,59 +363,60 @@ $.fn.JSlider = function (options) {
             var goToNum = parseFloat($(this).text());
             _jslider.animSlide(goToNum);
         });
-
     };
 
-    /*this.animThumbs = function (arrow, count) {
-        var $inner = _jslider.options.slider_controls.find('.inner');
-        var options = _jslider.options;
+    this.renderThumbs = function () {
+        _jslider.options.slider_controls = $('<div/>').addClass('slider-controls');
+
+        $(_jslider).find('.slide').each(function (index) {
+            var $slide_control = $('<div/>')
+                .addClass('control-slide')
+                .append($('.imgpager img:first', _jslider));
+
+            $slide_control.append('<div class="hide">' + index + '</div>');
+            $slide_control.appendTo(_jslider.options.slider_controls);
+        });
+
+        _jslider.options.slider_controls.appendTo(_jslider);
+
+        var $prev = $('<span class="prev-thumb pn"></span>');
+        var $next = $('<span class="next-thumb pn"></span>');
+        var $inner = $('<div class="inner"></div>');
+        var $outer = $('<div class="outer"></div>');
+        var thumb = _jslider.options.slider_controls.find('.control-slide')[0];
         var thumbOptions = _jslider.options.thumbs;
-        var speed = _jslider.options.slide_speed;
-        var left;
-        var prefix = '';
 
-        if (arrow === 'prev') {
-            if (count) {
-                if (count > options.slide_num) {
-                    count = (count - options.slide_num) % options.slide_count;
-                    left = (options.slide_count - count - thumbOptions.viewRange) > 0 ?
-                    (options.slide_count - count - thumbOptions.viewRange) * thumbOptions.stepWidth : 0;
-                    prefix = '-';
+        thumbOptions.stepWidth = thumb.offsetWidth;
+        thumbOptions.viewRange = parseInt($(_jslider).attr('data-previewslides')) || thumbOptions.viewRange;
+        thumbOptions.firstInView = 0;
+        thumbOptions.lastInView = thumbOptions.viewRange - 1;
 
-                    thumbOptions.firstInView = count - thumbOptions.viewRange;
-                    thumbOptions.lastInView = count;
-                } else {
-                    left = count * thumbOptions.stepWidth;
-                    prefix = '+=';
+        $outer.css({
+            'width': thumb.offsetWidth * thumbOptions.viewRange + 'px',
+            'height': thumb.offsetHeight + 'px'
+        });
 
-                    thumbOptions.firstInView -= count;
-                    thumbOptions.lastInView -= count;
-                }
-            } else {
-                left = 0;
+        _jslider.options.slider_controls
+            .wrapInner($inner)
+            .wrapInner($outer)
+            .append($prev)
+            .append($next);
 
-                thumbOptions.firstInView = 0;
-                thumbOptions.lastInView = thumbOptions.viewRange - 1;
-            }
-        } else if (arrow === 'next') {
-            if (count) {
-                if (count + options.slide_num >= options.slide_count) {
-                    count = (count + options.slide_num - options.slide_count) % options.slide_count;
-                    left = (count - thumbOptions.viewRange) * thumbOptions.stepWidth;
-                    prefix = '-';
-                }
-                left = count * thumbOptions.stepWidth;
-                prefix = '-=';
-            } else {
-                left = (options.slide_count - thumbOptions.viewRange) * thumbOptions.stepWidth;
-            }
-        }
+        $prev.click(function () {
+            //console.log('prev');
+            _jslider.animThumbs('prev');
+        });
+        $next.click(function () {
+            _jslider.animThumbs('next');
+            //console.log('next');
+        });
 
-        $inner.animate(
-            {'left': prefix + left},
-            speed
-        );
-    };*/
+        $(_jslider.options.slider_controls).find('.control-slide:first').addClass('active');
+        $(_jslider.options.slider_controls).find('.control-slide').click(function () {
+            var goToNum = parseFloat($(this).text());
+            _jslider.animSlide(goToNum);
+        });
+    };
 
     this.animThumbs = function (arrow) {
         var $inner = _jslider.options.slider_controls.find('.inner');
@@ -471,48 +424,43 @@ $.fn.JSlider = function (options) {
         var thumbOptions = _jslider.options.thumbs;
         var speed = _jslider.options.slide_speed;
         var left;
-        var prefix = '';
+        //var prefix = '';
 
         if (arrow === 'prev') {
-            if (options.slide_num > 0) {
-                if (options.slide_num > thumbOptions.firstInView) {
-                    return;
-                }
-
-                left = thumbOptions.stepWidth;
-                prefix = '+=';
-                thumbOptions.firstInView--;
-                thumbOptions.lastInView--;
-            } else if (options.slide_num === 0) {
-                left = (options.slide_count - thumbOptions.viewRange) * thumbOptions.stepWidth;
-                prefix = '-';
-
+            if (thumbOptions.firstInView >= thumbOptions.viewRange) {
+                thumbOptions.firstInView -= thumbOptions.viewRange;
+                thumbOptions.lastInView -= thumbOptions.viewRange;
+            } else if (thumbOptions.firstInView < thumbOptions.viewRange
+                && thumbOptions.firstInView > 0) {
+                thumbOptions.firstInView = 0;
+                thumbOptions.lastInView = thumbOptions.viewRange - 1;
+            } else {
                 thumbOptions.firstInView = options.slide_count - thumbOptions.viewRange;
                 thumbOptions.lastInView = options.slide_count - 1;
             }
         } else if (arrow === 'next') {
-            if (options.slide_num < options.slide_count - 1) {
-                if (options.slide_num < thumbOptions.lastInView) {
-                    return;
-                }
+            if (options.slide_count - thumbOptions.lastInView - 1 >= thumbOptions.viewRange) {
+                thumbOptions.firstInView += thumbOptions.viewRange;
+                thumbOptions.lastInView += thumbOptions.viewRange;
+            } else if (options.slide_count - thumbOptions.lastInView - 1 < thumbOptions.viewRange
+                && thumbOptions.lastInView < options.slide_count - 1) {
 
-                left = thumbOptions.stepWidth;
-                prefix = '-=';
-                thumbOptions.firstInView++;
-                thumbOptions.lastInView++;
-            } else if (options.slide_num === options.slide_count - 1) {
-                left = 0;
-
+                thumbOptions.firstInView = options.slide_count - thumbOptions.viewRange;
+                thumbOptions.lastInView = options.slide_count - 1;
+            } else {
                 thumbOptions.firstInView = 0;
                 thumbOptions.lastInView = thumbOptions.viewRange - 1;
             }
         }
 
+        left = thumbOptions.firstInView * thumbOptions.stepWidth * -1;
+
         $inner.animate(
-            {'left': prefix + left},
+            {'left': left},
             speed
         );
-    }; //запускать перед animSlide
+    };
+
 
     this.init(options);
     return this;
