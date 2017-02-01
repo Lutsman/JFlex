@@ -1,39 +1,46 @@
 /*slider*/
 .page-slideshow[data-control-mode="images"] .slider-controls {
   padding: 0 15px;
-  width: auto; }
-  .page-slideshow[data-control-mode="images"] .slider-controls .outer {
-    overflow: hidden;
-    position: relative;
-    z-index: 2; }
-  .page-slideshow[data-control-mode="images"] .slider-controls .inner {
-    width: auto;
-    left: 0;
-    top: 0;
+  width: auto;
+  top: 100%;
+  bottom: auto;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0); }
+.page-slideshow[data-control-mode="images"] .outer {
+  overflow: hidden;
+  position: relative;
+  z-index: 2; }
+.page-slideshow[data-control-mode="images"] .inner {
+  width: auto;
+  left: 0;
+  top: 0;
+  position: absolute;
+  z-index: 2; }
+.page-slideshow[data-control-mode="images"] .control-slide {
+  float: left;
+  display: block; }
+
+.prev-thumb, .next-thumb {
+  cursor: pointer;
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
+  position: absolute;
+  z-index: 2; }
+  .prev-thumb::before, .next-thumb::before {
+    display: block;
     position: absolute;
-    z-index: 2; }
-    .page-slideshow[data-control-mode="images"] .slider-controls .inner .control-slide {
-      float: left;
-      display: block; }
-  .page-slideshow[data-control-mode="images"] .slider-controls .prev-thumb, .page-slideshow[data-control-mode="images"] .slider-controls .next-thumb {
-    cursor: pointer;
-    top: 50%;
-    transform: translate3d(0, -50%, 0);
-    position: absolute;
-    z-index: 2; }
-    .page-slideshow[data-control-mode="images"] .slider-controls .prev-thumb::before, .page-slideshow[data-control-mode="images"] .slider-controls .next-thumb::before {
-      display: block;
-      position: absolute;
-      z-index: 2;
-      font-family: 'icons'; }
-  .page-slideshow[data-control-mode="images"] .slider-controls .prev-thumb {
-    left: 0; }
-    .page-slideshow[data-control-mode="images"] .slider-controls .prev-thumb::before {
-      content: '\e7e0'; }
-  .page-slideshow[data-control-mode="images"] .slider-controls .next-thumb {
-    right: 0; }
-    .page-slideshow[data-control-mode="images"] .slider-controls .next-thumb::before {
-      content: '\e7e3';
-      transform: translate3d(-100%, 0, 0); }
+    z-index: 2;
+    font-family: 'icons'; }
+
+.prev-thumb {
+  left: 0; }
+  .prev-thumb::before {
+    content: '\e7e0'; }
+
+.next-thumb {
+  right: 0; }
+  .next-thumb::before {
+    content: '\e7e3';
+    transform: translate3d(-100%, 0, 0); }
 
 /*# sourceMappingURL=custom.css.map */

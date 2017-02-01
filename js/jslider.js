@@ -322,23 +322,19 @@ $.fn.JSlider = function (options) {
     };
 
     this.renderArrows = function () {
-        _jslider.options.arrows = $('<div class="pn-control m-hide"><a class="pn prev" href="#"></a><a class="pn next" href="#"></a></div>');
+        var animSlideThrottled = _jslider.throttle(_jslider.animSlide, _jslider.options.slide_speed);
+        _jslider.options.arrows = $('<div class="pn-control m-hide"><span class="pn prev"></span><span class="pn next"></span></div>');
         $(_jslider).find('.slider-content').prepend(_jslider.options.arrows);
 
-
-        $(_jslider.options.arrows).find('.next').click(function () {
-            _jslider.animSlide('next');
-            return false;
-        });
-        $(_jslider.options.arrows).find('.prev').click(function () {
-            _jslider.animSlide('prev');
-            return false;
-        });
+        $(_jslider.options.arrows).find('.next').on('click', animSlideThrottled.bind(this, 'next'));
+        $(_jslider.options.arrows).find('.prev').on('click', animSlideThrottled.bind(this, 'prev'));
     };
 
     this.renderDots = function () {
         _jslider.options.slider_controls = $('<div/>').addClass('slider-controls');
         var groups = [];
+        var goToNumThrottled = _jslider.throttle(_jslider.goToNum,
+            _jslider.options.slide_speed);
 
         $(_jslider).find('.slide').each(function (index) {
             var group_name = $(this).attr('name');
@@ -359,10 +355,7 @@ $.fn.JSlider = function (options) {
         }
         $(_jslider.options.slider_controls).find('.group').last().addClass('last');
         $(_jslider.options.slider_controls).find('.control-slide:first').addClass('active');
-        $(_jslider.options.slider_controls).find('.control-slide').click(function () {
-            var goToNum = parseFloat($(this).text());
-            _jslider.animSlide(goToNum);
-        });
+        $(_jslider.options.slider_controls).find('.control-slide').on('click', goToNumThrottled);
     };
 
     this.renderThumbs = function () {
@@ -385,9 +378,13 @@ $.fn.JSlider = function (options) {
         var $outer = $('<div class="outer"></div>');
         var thumb = _jslider.options.slider_controls.find('.control-slide')[0];
         var thumbOptions = _jslider.options.thumbs;
+        var animThumbsThrottled = _jslider.throttle(_jslider.animThumbs,
+            _jslider.options.slide_speed);
+        var goToNumThrottled = _jslider.throttle(_jslider.goToNum,
+            _jslider.options.slide_speed);
 
         thumbOptions.stepWidth = thumb.offsetWidth;
-        thumbOptions.viewRange = parseInt($(_jslider).attr('data-previewslides')) || thumbOptions.viewRange;
+        thumbOptions.viewRange = parseInt($(_jslider).attr('data-thumbsInView')) || thumbOptions.viewRange;
         thumbOptions.firstInView = 0;
         thumbOptions.lastInView = thumbOptions.viewRange - 1;
 
@@ -402,22 +399,39 @@ $.fn.JSlider = function (options) {
             .append($prev)
             .append($next);
 
-        $prev.click(function () {
-            //console.log('prev');
-            _jslider.animThumbs('prev');
-        });
-        $next.click(function () {
-            _jslider.animThumbs('next');
-            //console.log('next');
-        });
+        /*добавляем место для карусели под слайдером*/
+        var controlsHeight = _jslider.options.slider_controls[0].offsetHeight;
+        $(_jslider).css('margin-bottom', controlsHeight + 'px');
+
+        $prev.on('click', animThumbsThrottled.bind(this, 'prev'));
+        $next.on('click', animThumbsThrottled.bind(this, 'next'));
 
         $(_jslider.options.slider_controls).find('.control-slide:first').addClass('active');
-        $(_jslider.options.slider_controls).find('.control-slide').click(function () {
-            var goToNum = parseFloat($(this).text());
-            _jslider.animSlide(goToNum);
+        $(_jslider.options.slider_controls).find('.control-slide').on('click', goToNumThrottled);
+
+        /*swipe support*/
+
+        _jslider.options.slider_controls.swipe({
+            //Generic swipe handler for all directions
+            swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
+                //TODO: запрет всплытия события, подумать возможно решить вопрос делегированием
+                event.stopPropagation();
+
+                switch (direction) {
+                    case 'left':
+                        animThumbsThrottled('next');
+                        break;
+
+                    case 'right':
+                        animThumbsThrottled('prev');
+                        break;
+                }
+            },
+            allowPageScroll: "vertical"
         });
     };
 
+    //TODO: добавить аргмунет количества смещаемых превьюх
     this.animThumbs = function (arrow) {
         var $inner = _jslider.options.slider_controls.find('.inner');
         var options = _jslider.options;
@@ -459,6 +473,41 @@ $.fn.JSlider = function (options) {
             {'left': left},
             speed
         );
+    };
+
+    this.goToNum = function () {
+        var goToNum = parseFloat($(this).text());
+        _jslider.animSlide(goToNum);
+    };
+
+    this.throttle = function (func, ms) {
+
+        var isThrottled = false,
+            savedArgs,
+            savedThis;
+
+        function wrapper() {
+
+            if (isThrottled) { // (2)
+                savedArgs = arguments;
+                savedThis = this;
+                return;
+            }
+
+            func.apply(this, arguments); // (1)
+
+            isThrottled = true;
+
+            setTimeout(function() {
+                isThrottled = false; // (3)
+                if (savedArgs) {
+                    wrapper.apply(savedThis, savedArgs);
+                    savedArgs = savedThis = null;
+                }
+            }, ms);
+        }
+
+        return wrapper;
     };
 
 
