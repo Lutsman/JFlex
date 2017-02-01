@@ -20,3 +20,34 @@ img {
 }
 
 
+.j_progress {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: inset 0 5px 5px rgba(0, 0, 0, 0.15);
+    background-color: #fafafa;
+    height: 28px;
+    line-height: 28px;
+}
+.j_progress.horizontal.small, .j_progress.horizontal.small .j_bar {
+    height: 5px;
+    line-height: 5px;
+}
+.j_progress .j_bar {
+    display: block;
+    float: left;
+    background-color: #eee;
+    box-shadow: none;
+}
+.j_bar.s_blue {
+    color: #fff !important;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+    background: -moz-linear-gradient(top, #2888aa 1%, #2d6b81 99%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(1%, #2888aa), color-stop(99%, #2d6b81));
+    background: -webkit-linear-gradient(top, #2888aa 1%, #2d6b81 99%);
+    background: -o-linear-gradient(top, #2888aa 1%, #2d6b81 99%);
+    background: -ms-linear-gradient(top, #2888aa 1%, #2d6b81 99%);
+    background: linear-gradient(to bottom, #2888aa 1%, #2d6b81 99%);
+    /*filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#2888aa', endColorstr='#2d6b81', GradientType=0);*/
+    box-shadow: 0 -2px 0 0 #135c77 inset;
+}
