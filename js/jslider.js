@@ -510,6 +510,23 @@ $.fn.JSlider = function (options) {
         return wrapper;
     };
 
+    this.debounce = function (func, ms) {
+        var state = false;
+
+        function wrapper() {
+            if (state) return;
+
+            func.apply(this, arguments);
+            state = true;
+
+            setTimeout(function () {
+                state = false;
+            }, ms);
+        }
+
+        return wrapper;
+    };
+
 
     this.init(options);
     return this;
