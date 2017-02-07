@@ -333,7 +333,7 @@ $.fn.JSlider = function (options) {
     this.renderDots = function () {
         _jslider.options.slider_controls = $('<div/>').addClass('slider-controls');
         var groups = [];
-        var goToNumThrottled = _jslider.throttle(_jslider.goToNum,
+        var goToNumDebounced = _jslider.debounce(_jslider.goToNum,
             _jslider.options.slide_speed);
 
         $(_jslider).find('.slide').each(function (index) {
@@ -355,7 +355,7 @@ $.fn.JSlider = function (options) {
         }
         $(_jslider.options.slider_controls).find('.group').last().addClass('last');
         $(_jslider.options.slider_controls).find('.control-slide:first').addClass('active');
-        $(_jslider.options.slider_controls).find('.control-slide').on('click', goToNumThrottled);
+        $(_jslider.options.slider_controls).find('.control-slide').on('click', goToNumDebounced);
     };
 
     this.renderThumbs = function () {
@@ -380,7 +380,7 @@ $.fn.JSlider = function (options) {
         var thumbOptions = _jslider.options.thumbs;
         var animThumbsThrottled = _jslider.throttle(_jslider.animThumbs,
             _jslider.options.slide_speed);
-        var goToNumThrottled = _jslider.throttle(_jslider.goToNum,
+        var goToNumDebounced = _jslider.debounce(_jslider.goToNum,
             _jslider.options.slide_speed);
 
         thumbOptions.stepWidth = thumb.offsetWidth;
@@ -408,7 +408,7 @@ $.fn.JSlider = function (options) {
         $next.on('click', animThumbsThrottled.bind(this, 'next'));
 
         $(_jslider.options.slider_controls).find('.control-slide:first').addClass('active');
-        $(_jslider.options.slider_controls).find('.control-slide').on('click', goToNumThrottled);
+        $(_jslider.options.slider_controls).find('.control-slide').on('click', goToNumDebounced);
 
         /*swipe support*/
 
