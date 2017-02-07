@@ -397,7 +397,8 @@ $.fn.JSlider = function (options) {
             .wrapInner($inner)
             .wrapInner($outer)
             .append($prev)
-            .append($next);
+            .append($next)
+            .css({marginLeft: '-' + (_jslider.options.slider_controls.outerWidth() / 2) + 'px'});
 
         /*добавляем место для карусели под слайдером*/
         var controlsHeight = _jslider.options.slider_controls[0].offsetHeight;
