@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="fonts/icons/guide/style.css">
     <link rel="stylesheet" href="fonts/gothampro/gothampro.css">
     <link rel="stylesheet" href="fonts/gothampro/style.css">
+    <link rel="stylesheet" href="css/tipsy.css">
     <link rel="stylesheet" href="css/jflex.css">
     <link rel="stylesheet" href="css/ckeditor.css">
     <link rel="stylesheet" href="css/modules.css">
@@ -40,6 +41,18 @@
     <script src="js/tipsy.js"></script>
     <script src="js/jquery.swipe.js"></script>
     <script src="js/jslider.js"></script>
+    <script>
+        $(document).ready(function () {
+            /*tooltips*/
+            (function(){
+                var $simpleTooltip = $('[data-role="tooltip"]');
+
+                $simpleTooltip.tipsy({
+                    fade: true
+                });
+            })();
+        });
+    </script>
 
 </head>
 <body id="major">
@@ -253,7 +266,7 @@
                         <div class="bold biggest mb10">9</div>
                         <div class="small">рейтинг надежности</div>
                     </div>
-                    <div class="col ph40">
+                    <div class="col ph40" data-role="tooltip" title="Tooltip!">
                         <div class="bold biggest ucase mb10">b</div>
                         <div class="small">класс стоимости</div>
                     </div>
@@ -311,7 +324,7 @@
                         <div class="bold biggest mb10">10</div>
                         <div class="small">рейтинг надежности</div>
                     </div>
-                    <div class="col ph40">
+                    <div class="col ph40" data-role="tooltip" title="Tooltip!">
                         <div class="bold biggest ucase mb10">a</div>
                         <div class="small">класс стоимости</div>
                     </div>
@@ -369,7 +382,7 @@
                         <div class="bold biggest mb10">9</div>
                         <div class="small">рейтинг надежности</div>
                     </div>
-                    <div class="col ph40">
+                    <div class="col ph40" data-role="tooltip" title="Tooltip!">
                         <div class="bold biggest ucase mb10">b</div>
                         <div class="small">класс стоимости</div>
                     </div>
